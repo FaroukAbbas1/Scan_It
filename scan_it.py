@@ -2,7 +2,7 @@
 """
 Scan-It: Mini TCP Port Scanner
 Author: Your Name
-GitHub: https://github.com/yourusername/Scan-It
+GitHub: https://github.com/FaroukAbbas1/Scan-It
 Description: Lightweight, multi-threaded TCP port scanner with customizable ports, threads, and speed presets.
 """
 
