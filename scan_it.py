@@ -11,14 +11,12 @@ import threading     # For multi-threaded scanning
 import argparse      # For command-line arguments
 from datetime import datetime
 
-# -----------------------------
-# Display Banner
-# -----------------------------
+
 print("=== Scan-It ===")
 
-# -----------------------------
-# Argument parsing (mini man page)
-# -----------------------------
+
+# mini man page
+
 parser = argparse.ArgumentParser(description="Scan-It: Mini TCP Port Scanner")
 parser.add_argument("host", help="Target host to scan (IP or domain)")
 parser.add_argument("-p", "--ports", help="Port range to scan (e.g., 20-500). Default: top 1000 ports")
@@ -29,9 +27,9 @@ args = parser.parse_args()
 
 host = args.host
 
-# -----------------------------
-# Top 1000 TCP ports (Nmap default)
-# -----------------------------
+
+# Top 1000 TCP ports
+
 top_ports = [
     1,3,7,9,13,17,19,20,21,22,23,25,26,37,53,79,80,81,82,83,84,85,88,89,90,99,100,106,
     109,110,111,113,119,125,135,139,143,144,146,161,163,179,199,211,212,222,254,255,
@@ -79,9 +77,9 @@ top_ports = [
     9998,9999,10000
 ]
 
-# -----------------------------
+
 # Determine ports to scan
-# -----------------------------
+
 if args.ports:
     try:
         start_port, end_port = map(int, args.ports.split('-'))
@@ -94,9 +92,9 @@ if args.ports:
 else:
     ports_to_scan = top_ports  # default top 1000 ports
 
-# -----------------------------
-# Speed presets
-# -----------------------------
+
+# Speed
+
 speed_settings = {
     "slow": {"threads": 10, "timeout": 1.5},
     "medium": {"threads": 50, "timeout": 1.0},
@@ -109,18 +107,16 @@ timeout = speed_settings[speed]["timeout"]
 # Override threads if user specified
 threads_count = args.threads if args.threads else speed_settings[speed]["threads"]
 
-# -----------------------------
+
 # Resolve hostname
-# -----------------------------
 try:
     target_ip = socket.gethostbyname(host)
 except socket.gaierror:
     print("Hostname could not be resolved!")
     exit()
 
-# -----------------------------
-# Scan header
-# -----------------------------
+
+# Scan Banner
 print("-" * 50)
 print(f"Target: {host} ({target_ip})")
 print(f"Ports: {ports_to_scan[0]}-{ports_to_scan[-1]} (Total: {len(ports_to_scan)})")
@@ -128,14 +124,12 @@ print(f"Threads: {threads_count} | Speed: {speed}")
 print("Scan started at: " + str(datetime.now()))
 print("-" * 50)
 
-# -----------------------------
+
 # Store open ports
-# -----------------------------
 open_ports = []
 
-# -----------------------------
+
 # Port scanning function
-# -----------------------------
 def scan_port(port):
     """
     Tries to connect to the target IP at the given port.
@@ -151,16 +145,14 @@ def scan_port(port):
     except:
         pass  # Ignore closed/unreachable ports
 
-# -----------------------------
+
 # Thread worker
-# -----------------------------
 def thread_worker(port_list):
     for port in port_list:
         scan_port(port)
 
-# -----------------------------
+
 # Split ports for threads
-# -----------------------------
 def chunks(lst, n):
     """Split list into n-sized chunks for threads"""
     for i in range(0, len(lst), n):
@@ -169,9 +161,8 @@ def chunks(lst, n):
 port_chunks = list(chunks(ports_to_scan, max(1, len(ports_to_scan)//threads_count)))
 threads = []
 
-# -----------------------------
+
 # Launch threads
-# -----------------------------
 for chunk in port_chunks:
     t = threading.Thread(target=thread_worker, args=(chunk,))
     threads.append(t)
@@ -181,9 +172,8 @@ for chunk in port_chunks:
 for t in threads:
     t.join()
 
-# -----------------------------
+
 # Scan completed
-# -----------------------------
 print("-" * 50)
 print(f"Scan completed at: {datetime.now()}")
 if open_ports:
