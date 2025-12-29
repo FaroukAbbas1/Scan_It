@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Scan-It: Mini TCP Port Scanner
-Author: Your Name
+Author: Farouk Abbas
 GitHub: https://github.com/FaroukAbbas1/Scan-It
 Description: Lightweight, multi-threaded TCP port scanner with customizable ports, threads, and speed presets.
 """
